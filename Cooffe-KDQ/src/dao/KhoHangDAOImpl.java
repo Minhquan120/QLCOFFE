@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,10 @@ public class KhoHangDAOImpl implements KhoHangDAO{
             Connection cons = JDBCConnect.getConnection();
             String sql = "select * from KhoHang";
             List<KhoHang> list = new ArrayList<>();
-            PreparedStatement ps = cons.prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
+            //PreparedStatement ps = cons.prepareCall(sql);
+            //ResultSet rs = ps.executeQuery();
+            Statement st = cons.createStatement();
+            ResultSet rs = st.executeQuery(sql);
             while(rs.next()){
                 KhoHang khohang = new KhoHang();
                 khohang.setMaSP(rs.getInt("MaSP"));
@@ -36,7 +39,8 @@ public class KhoHangDAOImpl implements KhoHangDAO{
                
                 list.add(khohang);
             }
-            ps.close();
+            //ps.close();
+            st.close();
             rs.close();
             cons.close();
             return list;
