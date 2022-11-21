@@ -607,6 +607,7 @@ public class From_Menu extends javax.swing.JFrame {
         MessageFormat footer = new MessageFormat("Page {0, number, integer}");
         try {
             JTabMenu.print(JTable.PrintMode.NORMAL, header, footer);
+            
         } catch (java.awt.print.PrinterException e) {
             System.err.format("Không thấy máy in", e.getMessage());
         }

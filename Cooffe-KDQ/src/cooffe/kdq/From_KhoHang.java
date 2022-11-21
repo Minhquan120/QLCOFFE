@@ -5,13 +5,23 @@
  */
 package cooffe.kdq;
 
+import Model.KhoHang;
+import Service.KhoHangSV;
+import Ublity.Classtabmodel;
 import controller.CaPheController;
+import java.sql.Array;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -28,10 +38,11 @@ public class From_KhoHang extends javax.swing.JFrame {
 
     public From_KhoHang() {
         initComponents();
+        
 
-        CaPheController controller = new CaPheController(jpnView, btnThem, jtfSearch);
+        CaPheController controller = new CaPheController(jpnView, btnThem, jtfSearch, txtMaSP, txtTenMon, txtSL);
         controller.setDataToTable();
-
+        
     }
 
     /**
@@ -69,6 +80,12 @@ public class From_KhoHang extends javax.swing.JFrame {
 
         jtfSearch.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
+        jpnView.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jpnViewMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpnViewLayout = new javax.swing.GroupLayout(jpnView);
         jpnView.setLayout(jpnViewLayout);
         jpnViewLayout.setHorizontalGroup(
@@ -77,7 +94,7 @@ public class From_KhoHang extends javax.swing.JFrame {
         );
         jpnViewLayout.setVerticalGroup(
             jpnViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
+            .addGap(0, 453, Short.MAX_VALUE)
         );
 
         btnThem.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -128,10 +145,9 @@ public class From_KhoHang extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpnView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -152,14 +168,17 @@ public class From_KhoHang extends javax.swing.JFrame {
                                 .addComponent(jLabel4)
                                 .addGap(38, 38, 38)
                                 .addComponent(txtSL, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(93, 93, 93)))))
+                                .addGap(93, 93, 93))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(336, 336, 336)
+                        .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jpnView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(336, 336, 336)
-                .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,11 +201,11 @@ public class From_KhoHang extends javax.swing.JFrame {
                     .addComponent(txtTenMon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addComponent(jpnView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -232,11 +251,10 @@ public class From_KhoHang extends javax.swing.JFrame {
                     int kq = st.executeUpdate(sql);
                     if (kq > 0) {
                         JOptionPane.showMessageDialog(this, "Thêm Mới Thành Công ");
-                        xoatrang(); 
-                        
+                        xoatrang();
+
                     }
-                    
-                        
+
                 }
                 st.close();
             }
@@ -244,30 +262,72 @@ public class From_KhoHang extends javax.swing.JFrame {
             rs.close();
         } catch (Exception e) {
         }
- 
+
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // TODO add your handling code here:
-        cons=jc.getConnection();
+        cons = jc.getConnection();
+        /*
         try {
-            String sql = "Delete KhoHang where MaSP ='" + txtMaSP.getText() + "'";
+            String sql = "Delete KhoHang where MaSP ='" + txtMaSP + "'";
                 Statement st = cons.createStatement();
                 int chk = JOptionPane.showConfirmDialog(this, "Bạn Chắc Chắn Xóa Chứ!","Thông Báo",JOptionPane.YES_NO_OPTION);
                 if (chk==JOptionPane.YES_OPTION) {
                 st.executeUpdate(sql);
                  
                 JOptionPane.showMessageDialog(this, "Xóa Thành Công ");
+                xoatrang();
             }
         } catch (Exception e) {
+        }*/
+
+        int ret = JOptionPane.showConfirmDialog(this, "Bạn Chắc Chắn Xóa Chứ!", "Thông Báo", JOptionPane.YES_NO_OPTION);
+        if (ret != JOptionPane.YES_OPTION) {
+            return;
         }
-                
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=CaPhe;user=sa;password=0839294607");
+            ps = conn.prepareStatement("Delete From KhoHang where MaSp = ?");
+            ps.setInt(1, 4); //giá trị của cột đầu tiên tại dòng được chọn trong table
+
+            ret = ps.executeUpdate();
+            if (ret != -1) {
+                JOptionPane.showMessageDialog(this, "Xóa Thành Công ");
+                xoatrang();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception ex2) {
+                ex2.printStackTrace();
+            }
+        }
+
     }//GEN-LAST:event_btnXoaActionPerformed
+   
+    private void jpnViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnViewMouseClicked
+        // TODO add your handling code here:
+        
+        
+
+    }//GEN-LAST:event_jpnViewMouseClicked
     private void xoatrang() {
         txtMaSP.setText("");
         txtTenMon.setText("");
         txtSL.setText("");
-        setDataToTable();
+        CaPheController controller = new CaPheController(jpnView, btnThem, jtfSearch, txtMaSP, txtTenMon, txtSL);
+        controller.setDataToTable();
     }
 
     /**
@@ -307,8 +367,7 @@ public class From_KhoHang extends javax.swing.JFrame {
     private javax.swing.JTextField txtTenMon;
     // End of variables declaration//GEN-END:variables
 
-    private void setDataToTable() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
+    
 }

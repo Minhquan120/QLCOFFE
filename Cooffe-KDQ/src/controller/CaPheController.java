@@ -11,6 +11,11 @@ import Service.KhoHangSVinpl;
 import Ublity.Classtabmodel;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -24,38 +29,46 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+
 /**
  *
  * @author Administrator
  */
 public class CaPheController {
+
     private JPanel jpnView;
     private JButton btnThem;
     private JTextField jtfSearch;
-    
-    private Classtabmodel classtabmodel=null;
-    
-    private final String[] COLUMNS = {"Mã Sản Phẩm","Tên Sản Phẩm","Số Lượng"};
+    private JTextField txtMaSP, txtTenMon, txtSL;
+   
+
+    private Classtabmodel classtabmodel = null;
+
+    private final String[] COLUMNS = {"Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng"};
     private TableRowSorter<TableModel> rowSorter = null;
 
     private KhoHangSV khohangsv = null;
-    
-    public CaPheController(JPanel jpnView, JButton btnThem, JTextField jtfSearch) {
+
+    public CaPheController(JPanel jpnView, JButton btnThem, JTextField jtfSearch, JTextField txtMaSP, JTextField txtTenMon, JTextField txtSL) {
         this.jpnView = jpnView;
         this.btnThem = btnThem;
         this.jtfSearch = jtfSearch;
+        this.txtMaSP = txtMaSP;
+        this.txtTenMon = txtTenMon;
+        this.txtSL = txtSL;
+        
         this.classtabmodel = new Classtabmodel();
         this.khohangsv = new KhoHangSVinpl();
     }
-    
-        public void setDataToTable() {
+
+    public void setDataToTable() {
         List<KhoHang> listItem = khohangsv.getList();
         DefaultTableModel model = classtabmodel.setTableKhoHang(listItem, COLUMNS);
-            JTable table = new JTable(model);
+        JTable table = new JTable(model);
 
         rowSorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(rowSorter);
-        
+
         jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -81,7 +94,6 @@ public class CaPheController {
             public void changedUpdate(DocumentEvent e) {
             }
         });
-
         JScrollPane scroll = new JScrollPane();
         scroll.getViewport().add(table);
         scroll.setPreferredSize(new Dimension(1350, 400));
@@ -90,6 +102,8 @@ public class CaPheController {
         jpnView.add(scroll);
         jpnView.validate();
         jpnView.repaint();
-        }
-        
+
+    }
+
+    
 }

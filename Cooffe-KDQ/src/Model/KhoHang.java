@@ -16,6 +16,14 @@ public class KhoHang implements Serializable{
     private String TenSP;
     private int TongSL;
 
+    
+
+
+    public KhoHang() {
+    }
+
+    
+
     public int getMaSP() {
         return MaSP;
     }
