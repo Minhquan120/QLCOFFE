@@ -11,18 +11,21 @@ import java.io.Serializable;
  *
  * @author Administrator
  */
-public class KhoHang implements Serializable{
-    private int MaSP;
-    private String TenSP;
-    private int TongSL;
+public class KhoHang {
+   public int MaSP;
+    public String TenSP;
+    public int TongSL;
+    public String NgayNhap;
 
-    
-
+    public KhoHang(int MaSP, String TenSP, int TongSL, String NgayNhap) {
+        this.MaSP = MaSP;
+        this.TenSP = TenSP;
+        this.TongSL = TongSL;
+        this.NgayNhap = NgayNhap;
+    }
 
     public KhoHang() {
     }
-
-    
 
     public int getMaSP() {
         return MaSP;
@@ -48,9 +51,20 @@ public class KhoHang implements Serializable{
         this.TongSL = TongSL;
     }
 
+    public String getNgayNhap() {
+        return NgayNhap;
+    }
+
+    public void setNgayNhap(String NgayNhap) {
+        this.NgayNhap = NgayNhap;
+    }
+
     @Override
     public String toString() {
-        return "KhoHang{" + "MaSP=" + MaSP + ", TenSP=" + TenSP + ", TongSL=" + TongSL + '}';
+        return "KhoHang{" + "MaSP=" + MaSP + ", TenSP=" + TenSP + ", TongSL=" + TongSL + ", NgayNhap=" + NgayNhap + '}';
     }
+    
+ 
+    
     
 }
